@@ -8,7 +8,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Run File Copy Action
-        uses: ./my-composite-action
+        uses: ./.github/actions/copy-file-action
         with:
           source-file: "source.txt"
           target-file: "test.txt"
