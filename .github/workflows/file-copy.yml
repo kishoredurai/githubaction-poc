@@ -3,12 +3,19 @@ on: [push]
 
 jobs:
   file-copy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Run File Copy Action
         uses: ./.github/actions/copy-file-action
         with:
-          source-file: "source.txt"
-          target-file: "test.txt"
+          contents: "source.txt"
+          source_folder: "feed/test/main"
+          target_folder: "artifact/main"
+          
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+            name: drop
+            path: ${{ github.workspace }}/artifact

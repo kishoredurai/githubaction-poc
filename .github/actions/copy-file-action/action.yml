@@ -1,20 +1,30 @@
-name: "File Copy Action"
-description: "This action creates a file and copies its content to another file"
+name: 'Copy File Action'
+description: 'An action to copy a file from a source folder to a target folder'
+
 inputs:
-  source-file:
-    description: "The name of the source file to create"
+  contents:
+    description: 'Name of the file to copy'
     required: true
-    default: "source.txt"
-  target-file:
-    description: "The name of the target file to copy content to"
+    
+  source_folder:
+    description: 'Source folder where the file is located'
     required: true
-    default: "target.txt"
+
+  target_folder:
+    description: 'Target folder where the file should be copied'
+    required: true
+    default: 'artifact'
+
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
-    - name: "Create source file"
-      shell: bash
-      run: echo "This is the content of the source file." > ${{ inputs.source-file }}
-    - name: "Copy content to target file"
-      shell: bash
-      run: cp ${{ inputs.source-file }} ${{ inputs.target-file }}
+    - name: Create target directory
+      shell: pwsh
+      run: |
+        New-Item -ItemType Directory -Force -Path "${{ github.workspace }}\${{ inputs.target_folder }}"
+
+    - name: Copy file
+      shell: pwsh
+      run: |
+        Copy-Item -Path "${{ github.workspace }}\${{ inputs.source_folder }}\${{ inputs.contents }}" `
+                  -Destination "${{ github.workspace }}\${{ inputs.target_folder }}\"
