@@ -13,6 +13,8 @@ runs:
   using: "composite"
   steps:
     - name: "Create source file"
+      shell: bash
       run: echo "This is the content of the source file." > ${{ inputs.source-file }}
     - name: "Copy content to target file"
+      shell: bash
       run: cp ${{ inputs.source-file }} ${{ inputs.target-file }}
