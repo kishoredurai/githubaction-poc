@@ -1,0 +1,18 @@
+name: "File Copy Action"
+description: "This action creates a file and copies its content to another file"
+inputs:
+  source-file:
+    description: "The name of the source file to create"
+    required: true
+    default: "source.txt"
+  target-file:
+    description: "The name of the target file to copy content to"
+    required: true
+    default: "target.txt"
+runs:
+  using: "composite"
+  steps:
+    - name: "Create source file"
+      run: echo "This is the content of the source file." > ${{ inputs.source-file }}
+    - name: "Copy content to target file"
+      run: cp ${{ inputs.source-file }} ${{ inputs.target-file }}

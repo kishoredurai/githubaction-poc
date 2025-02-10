@@ -1,0 +1,14 @@
+name: "File Copy Workflow"
+on: [push]
+
+jobs:
+  file-copy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Run File Copy Action
+        uses: ./my-composite-action
+        with:
+          source-file: "source.txt"
+          target-file: "test.txt"
