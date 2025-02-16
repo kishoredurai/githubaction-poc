@@ -29,6 +29,14 @@ jobs:
             source_folder: "feed"
             target_folder: "artifact/main/folders"
 
+
+      - name: Copy a star folder
+        uses: ./.github/actions/copy-file-action
+        with:
+            contents: "*"
+            source_folder: "feed"
+            target_folder: "artifact/main/star"
+
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
