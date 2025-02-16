@@ -16,15 +16,18 @@ inputs:
     default: 'artifact'
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Create target directory
       shell: pwsh
       run: |
-        New-Item -ItemType Directory -Force -Path "${{ github.workspace }}\${{ inputs.target_folder }}"
+        New-Item -ItemType Directory -Force -Path "${{ inputs.target_folder }}"
 
-    - name: Copy file
+    - name: Copy files
       shell: pwsh
       run: |
-        Copy-Item -Path "${{ github.workspace }}\${{ inputs.source_folder }}\${{ inputs.contents }}" `
-                  -Destination "${{ github.workspace }}\${{ inputs.target_folder }}\"
+        $files = "${{ inputs.contents }}".Split(',')
+        foreach ($file in $files) {
+          Copy-Item -Path "${{ inputs.source_folder }}\$file" `
+                    -Destination "${{ inputs.target_folder }}\" -Recurse -Force
+        }

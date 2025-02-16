@@ -7,13 +7,28 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Run File Copy Action
+
+      - name: Copy single file
         uses: ./.github/actions/copy-file-action
         with:
           contents: "source.txt"
           source_folder: "feed/test/main"
-          target_folder: "artifact/main"
-          
+          target_folder: "artifact/main/test"
+
+      - name: Copy a multiple file
+        uses: ./.github/actions/copy-file-action
+        with:
+          contents: "source.txt,test.txt"
+          source_folder: "feed/test/main"
+          target_folder: "artifact/main/two"
+
+      - name: Copy a multiple folder
+        uses: ./.github/actions/copy-file-action
+        with:
+            contents: "folder1/*,folder2/*,folder3/*"
+            source_folder: "feed"
+            target_folder: "artifact/main/folders"
+
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
