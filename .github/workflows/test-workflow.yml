@@ -1,0 +1,44 @@
+name: App Image Build
+
+on:
+  workflow_dispatch:
+  push:
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Build job running!"
+
+  dev:
+    if: ${{ github.ref_name == 'main' && !contains(vars.SKIP_ENV, 'dev') }} 
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Dev job running!"
+
+  qa:
+    if: ${{ github.ref_name == 'main' && !contains(vars.SKIP_ENV, 'qa') }} 
+    needs: [build,dev]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "QA job running!"
+
+  stage:
+    if: ${{ github.ref_name == 'main' && !contains(vars.SKIP_ENV, 'stage') }} 
+    needs: [build,dev,qa]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Stage job running!"
+
+  prod:
+    if: ${{ github.ref_name == 'main' && !contains(vars.SKIP_ENV, 'prod') }} 
+    needs:  [build,dev,qa,stage]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Prod job hi running!"
