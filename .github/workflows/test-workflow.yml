@@ -16,29 +16,43 @@ jobs:
       - run: echo "Build job running!"
 
   dev:
-    if: ${{ github.ref_name == 'main' && !contains(vars.SKIP_ENV, 'dev') }} 
+    if: >-
+      ${{ github.ref_name == 'main' && !contains(vars.SKIP_ENV, 'dev')
+          && (needs.build.result == 'success' || needs.build.result == 'skipped') }}
     needs: [build]
     runs-on: ubuntu-latest
     steps:
       - run: echo "Dev job running!"
 
   qa:
-    if: ${{ github.ref_name == 'main' && !contains(vars.SKIP_ENV, 'qa') }} 
-    needs: [build,dev]
+    if: >-
+      ${{ github.ref_name == 'main' && !contains(vars.SKIP_ENV, 'qa')
+          && (needs.build.result == 'success' || needs.build.result == 'skipped')
+          && (needs.dev.result == 'success' || needs.dev.result == 'skipped') }}
+    needs: [build, dev]
     runs-on: ubuntu-latest
     steps:
       - run: echo "QA job running!"
 
   stage:
-    if: ${{ github.ref_name == 'main' && !contains(vars.SKIP_ENV, 'stage') }} 
-    needs: [build,dev,qa]
+    if: >-
+      ${{ github.ref_name == 'main' && !contains(vars.SKIP_ENV, 'stage')
+          && (needs.build.result == 'success' || needs.build.result == 'skipped')
+          && (needs.dev.result == 'success' || needs.dev.result == 'skipped')
+          && (needs.qa.result == 'success' || needs.qa.result == 'skipped') }}
+    needs: [build, dev, qa]
     runs-on: ubuntu-latest
     steps:
       - run: echo "Stage job running!"
 
   prod:
-    if: ${{ github.ref_name == 'main' && !contains(vars.SKIP_ENV, 'prod') }} 
-    needs:  [build,dev,qa,stage]
+    if: >-
+      ${{ github.ref_name == 'main' && !contains(vars.SKIP_ENV, 'prod')
+          && (needs.build.result == 'success' || needs.build.result == 'skipped')
+          && (needs.dev.result == 'success' || needs.dev.result == 'skipped')
+          && (needs.qa.result == 'success' || needs.qa.result == 'skipped')
+          && (needs.stage.result == 'success' || needs.stage.result == 'skipped') }}
+    needs: [build, dev, qa, stage]
     runs-on: ubuntu-latest
     steps:
       - run: echo "Prod job hi running!"
